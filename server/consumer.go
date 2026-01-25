@@ -10,6 +10,8 @@ func emailWorker(id int ,ch chan Recipient,wg *sync.WaitGroup) {
 	for recipient :=range ch {
 		fmt.Println(recipient)
 		fmt.Println(id)
+		
+
 	}
 	
 }
