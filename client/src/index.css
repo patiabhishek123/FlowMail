@@ -2,12 +2,40 @@
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #0f172a;
+  color: #020617;
   background-color: #f3f4f6;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* theme tokens */
+  --accent: #0f766e;
+  --accent-soft: #ecfdf3;
+  --accent-strong: #134e4a;
+  --accent-border: #6ee7b7;
+  --surface: rgba(255, 255, 255, 0.96);
+  --surface-subtle: #f9fafb;
+  --border-subtle: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-primary: #020617;
+  --text-muted: #6b7280;
+}
+
+:root[data-theme='dark'] {
+  color: #e5e7eb;
+  background-color: #020617;
+
+  --accent: #22c55e;
+  --accent-soft: rgba(34, 197, 94, 0.12);
+  --accent-strong: #bbf7d0;
+  --accent-border: #22c55e;
+  --surface: rgba(15, 23, 42, 0.98);
+  --surface-subtle: #020617;
+  --border-subtle: #1f2937;
+  --border-strong: #334155;
+  --text-primary: #e5e7eb;
+  --text-muted: #9ca3af;
 }
 
 *,
@@ -24,6 +52,13 @@ body {
   background:
     radial-gradient(circle at top left, #e5e7eb 0, #f3f4f6 40%, #f9fafb 100%),
     #f3f4f6;
+}
+
+:root[data-theme='dark'] body {
+  background:
+    radial-gradient(circle at top left, #020617 0, #020617 40%, #020617 100%),
+    #020617;
+  color: #e5e7eb;
 }
 
 a {

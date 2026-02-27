@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 type SubscriberStatus = 'active' | 'unsubscribed'
@@ -71,6 +71,8 @@ const initialCampaigns: Campaign[] = [
 
 type SendMode = 'now' | 'schedule'
 
+type Theme = 'light' | 'dark'
+
 function App() {
   const [subscribers] = useState<Subscriber[]>(initialSubscribers)
   const [campaigns, setCampaigns] = useState<Campaign[]>(initialCampaigns)
@@ -81,6 +83,20 @@ function App() {
   const [sendMode, setSendMode] = useState<SendMode>('now')
   const [scheduledFor, setScheduledFor] = useState('')
   const [csvFileName, setCsvFileName] = useState<string | null>(null)
+  const [theme, setTheme] = useState<Theme>(() => {
+    const stored = window.localStorage.getItem('flowmail-theme')
+    if (stored === 'light' || stored === 'dark') {
+      return stored
+    }
+
+    const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches
+    return prefersDark ? 'dark' : 'light'
+  })
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    window.localStorage.setItem('flowmail-theme', theme)
+  }, [theme])
 
   const handleCsvChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -118,6 +134,10 @@ function App() {
     setIsCreateOpen(false)
   }
 
+  const toggleTheme = () => {
+    setTheme((previous) => (previous === 'light' ? 'dark' : 'light'))
+  }
+
   return (
     <div className="app-shell">
       <header className="app-header">
@@ -127,13 +147,24 @@ function App() {
             Minimal, focused workspace to manage subscribers and dispatch campaigns.
           </p>
         </div>
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => setIsCreateOpen(true)}
-        >
-          Create campaign
-        </button>
+        <div className="header-actions">
+          <button
+            type="button"
+            className="btn btn-ghost theme-toggle"
+            onClick={toggleTheme}
+            aria-label={theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme'}
+          >
+            <span className="theme-toggle-dot" aria-hidden="true" />
+            <span className="theme-toggle-label">{theme === 'light' ? 'Light' : 'Dark'}</span>
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => setIsCreateOpen(true)}
+          >
+            Create campaign
+          </button>
+        </div>
       </header>
 
       <main className="content-grid">
