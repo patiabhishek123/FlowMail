@@ -3,7 +3,7 @@
   line-height: 1.5;
   font-weight: 400;
   color: #020617;
-  background-color: #f3f4f6;
+  background-color: #eef2ff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -14,8 +14,8 @@
   --accent-soft: #ecfdf3;
   --accent-strong: #134e4a;
   --accent-border: #6ee7b7;
-  --surface: rgba(255, 255, 255, 0.96);
-  --surface-subtle: #f9fafb;
+  --surface: #fdfdfb;
+  --surface-subtle: #f3f8ff;
   --border-subtle: #e5e7eb;
   --border-strong: #d1d5db;
   --text-primary: #020617;
@@ -50,8 +50,8 @@ body {
   min-height: 100vh;
   color: inherit;
   background:
-    radial-gradient(circle at top left, #e5e7eb 0, #f3f4f6 40%, #f9fafb 100%),
-    #f3f4f6;
+    radial-gradient(circle at top left, #e0f2fe 0, #eef2ff 35%, #ecfdf3 90%),
+    #e5e7eb;
 }
 
 :root[data-theme='dark'] body {

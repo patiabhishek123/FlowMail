@@ -73,6 +73,86 @@ type SendMode = 'now' | 'schedule'
 
 type Theme = 'light' | 'dark'
 
+type AuthScreenProps = {
+  onAuthenticated: () => void
+}
+
+function AuthScreen({ onAuthenticated }: AuthScreenProps) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState<string | null>(null)
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (!email.trim() || !password.trim()) {
+      setError('Enter an email and password to continue.')
+      return
+    }
+
+    window.localStorage.setItem('flowmail-auth', 'true')
+    onAuthenticated()
+  }
+
+  return (
+    <div className="auth-shell">
+      <div className="auth-panel">
+        <div className="auth-header">
+          <div className="auth-badge">FlowMail</div>
+          <h1 className="auth-title">Sign in</h1>
+          <p className="auth-subtitle">Access your campaigns and subscriber lists.</p>
+        </div>
+
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="field-group">
+            <label className="field-label" htmlFor="auth-email">
+              Work email
+            </label>
+            <input
+              id="auth-email"
+              className="field-input"
+              type="email"
+              autoComplete="email"
+              placeholder="you@company.com"
+              value={email}
+              onChange={(event) => {
+                setEmail(event.target.value)
+                if (error) setError(null)
+              }}
+            />
+          </div>
+
+          <div className="field-group">
+            <label className="field-label" htmlFor="auth-password">
+              Password
+            </label>
+            <input
+              id="auth-password"
+              className="field-input"
+              type="password"
+              autoComplete="current-password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(event) => {
+                setPassword(event.target.value)
+                if (error) setError(null)
+              }}
+            />
+          </div>
+
+          {error && <p className="auth-error">{error}</p>}
+
+          <button type="submit" className="btn btn-primary auth-submit">
+            Sign in
+          </button>
+        </form>
+
+        <p className="auth-meta">Demo only – credentials are not validated.</p>
+      </div>
+    </div>
+  )
+}
+
 function App() {
   const [subscribers] = useState<Subscriber[]>(initialSubscribers)
   const [campaigns, setCampaigns] = useState<Campaign[]>(initialCampaigns)
@@ -91,6 +171,9 @@ function App() {
 
     const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches
     return prefersDark ? 'dark' : 'light'
+  })
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return window.localStorage.getItem('flowmail-auth') === 'true'
   })
 
   useEffect(() => {
@@ -138,11 +221,18 @@ function App() {
     setTheme((previous) => (previous === 'light' ? 'dark' : 'light'))
   }
 
+  if (!isAuthenticated) {
+    return <AuthScreen onAuthenticated={() => setIsAuthenticated(true)} />
+  }
+
   return (
     <div className="app-shell">
       <header className="app-header">
         <div>
-          <h1 className="app-title">FlowMail Campaigns</h1>
+          <div className="app-title-row">
+            <h1 className="app-title">FlowMail</h1>
+            <span className="app-title-pill">Campaigns</span>
+          </div>
           <p className="app-subtitle">
             Minimal, focused workspace to manage subscribers and dispatch campaigns.
           </p>
@@ -229,15 +319,6 @@ function App() {
               <p className="panel-description">
                 Draft, schedule, and dispatch email campaigns to your audience.
               </p>
-            </div>
-            <div className="panel-actions">
-              <button
-                type="button"
-                className="btn btn-outline"
-                onClick={() => setIsCreateOpen(true)}
-              >
-                New campaign
-              </button>
             </div>
           </div>
 
